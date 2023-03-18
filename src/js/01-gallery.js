@@ -1,48 +1,30 @@
+import SimpleLightbox from 'simplelightbox';
+import "simplelightbox/dist/simple-lightbox.min.css";
+// Add imports above this line
 import { galleryItems } from './gallery-items';
-
-import SimpleLightbox from "simplelightbox";
-import SimpleLightbox from "simplelightbox/dist/simple-lightbox.esm";
-
-
 
 // Change code below this line
 
-const galleryContainer = document.querySelector('.js-gallery')
-const markupGallery = createGallaryMarkup(galleryItems);
+const galleryContainer = document.querySelector('.gallery');
+const itemsMarkup = createGalleryItemsMarkup(galleryItems);
+galleryContainer.insertAdjacentHTML('beforeend', itemsMarkup);
 
-galleryContainer.insertAdjacentHTML('beforeend', markupGallery);
-
-galleryContainer.addEventListener('click', onGalleryContainerClick)
-
-function createGallaryMarkup(galleryItems) {
-    return galleryItems.map(({ preview, original, description }) => {
-      return `
-        <div class="gallery__item">
-          <a class="gallery__link" href="${original}">
-            <img
-              class="gallery__image"
-              src="${preview}"
-              data-source="${original}"
-              alt="${description}"
-            />
-          </a>
-        </div>
-      `;
-    })
-    .join('');
-  }
-
-function onGalleryContainerClick(e) {
-  e.preventDefault();
-  
-  if (e.target.nodeName !== 'IMG') {
-    return;
-  }
-  const imageSrc = e.target.dataset.source;
-  const imageModalSrc = basicLightbox.create(`<img src="${imageSrc}" width="1200">`);
-  imageModalSrc.show();
+// rendered items
+function createGalleryItemsMarkup(items) {
+  return items.map(({ preview, original, description }) => {
+    return `
+  <a class="gallery__item" href="${original}">
+    <img
+      class="gallery__image"
+      src="${preview}"
+      alt="${description}"
+    />
+  </a>
+`
+  }).join('');
 }
 
-
-
-
+// use library SimpleLightbox
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt', captionPosition: 'bottom', captionDelay: 250
+});
